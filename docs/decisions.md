@@ -209,15 +209,7 @@
 - **Rationale:** Provides scalable, robust search and autosuggest on top of Supabase Postgres, while staying flexible enough to swap to an external search engine later without changing UI.
 - **Implications:** Enables search over restaurant name, menu items, descriptions, and reviews with ranking & snippets, and gives us a foundation for query analytics and suggestion popularity tuning.
 
-## DRAFT DL-025 – Search Engine Choice (Postgres-first, Typesense-ready)
-
-- **Status:** DRAFT
-- **Summary:**
-  - Use Postgres full-text search + trigram as the initial search engine for EasyEats.
-  - Keep `restaurant_search_index` as the canonical search document table and expose search via `/api/search` and `/api/search/suggestions`.
-  - Design these APIs so the underlying engine can be swapped to Typesense in the future without changing the front-end.
-- **Rationale:** Reduces operational complexity for the MVP while still delivering robust, multi-field search and autosuggest; preserves the option to adopt Typesense later if scale or feature needs demand it.
-- **Implications:** Future adoption of Typesense will focus on building a sync worker from `restaurant_search_index` and updating the API implementation, not on UI refactors.
+## DRAFT DL-025 – Search Engine Choice (Typesense chosen)
 
 ## DRAFT DL-026 – Search Index v2 (Schema-aligned)
 
@@ -235,3 +227,13 @@
 - Created `restaurant_search_index` (one row per restaurant) with RLS, GIN index, and a `refresh_restaurant_search_index` function plus triggers on restaurants, menus, menu_items, restaurant_reviews, restaurant_cuisines, and restaurant_features.
 - Created `search_suggestions` with RLS, trigram index, uniqueness index, and seed data for restaurant and dish suggestions.
 - Backfilled the search index and suggestions for existing data.
+
+APPROVED: DL-028 — Typesense Integration
+
+Status: APPROVED
+
+Summary: Adopt Typesense as the primary search engine for EasyEats, superseding Postgres FTS (DL-024, DL-027).
+
+Rationale: Superior performance, typo-tolerance, and reduced primary database load.
+
+Implications: Search queries and indexing are handled via Supabase Edge Functions and the Typesense API..
