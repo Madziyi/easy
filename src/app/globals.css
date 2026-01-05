@@ -24,3 +24,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+mark {
+  background-color: #fef08a; /* Soft yellow */
+  color: #854d0e;            /* Dark gold text */
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 500;
+}
